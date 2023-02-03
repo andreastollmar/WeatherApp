@@ -13,7 +13,7 @@ namespace WeatherApp
             const int startX = 1;
             const int startY = 1;
             const int optionsPerLine = 1;
-            const int spacingPerLine = 6;
+            const int spacingPerLine = 15;
 
             int currentSelection = 0;
 

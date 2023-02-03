@@ -15,8 +15,8 @@
             //}
 
             
-            bool cancel = true;
-            int choice = Helpers.MultipleChoice(cancel, mainMenuEnums);
+            
+            int choice = Helpers.MultipleChoice(true, mainMenuEnums);
             Console.WriteLine(choice);
         }
     }
