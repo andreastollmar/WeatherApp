@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace WeatherApp
@@ -153,6 +154,30 @@ namespace WeatherApp
                     break;
 
             }
+        }
+
+        public static void FetchData()
+        {
+            string path = "../../../tempdata5-med fel/tempdata5-med fel.txt";
+            string pattern = "^([0-9]{4})-([0-1][0-9])-([0-3][0-9])\\s([0-2][0-9]:[0-5][0-9]:[0-5][0-5]),(Inne),([0-9][0-9]*.[0-9]),([0-9][0-9]*)$";
+            Regex regex = new Regex(pattern);
+            List<string> indoorData = new List<string>();
+            var allData = File.ReadAllLines(path);            
+            MatchCollection matches;
+            int i = 0;
+            foreach (string line in allData)
+            {
+                matches = regex.Matches(allData[i]);                
+                i++;
+            }
+            Console.WriteLine("");
+            
+            
+
+
+
+
+            Console.WriteLine();
         }
 
     }
