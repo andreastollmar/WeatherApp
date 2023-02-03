@@ -37,7 +37,7 @@ namespace WeatherApp
                     Console.ResetColor();
                 }
 
-                key = Console.ReadKey(true).Key;
+                key = Console.ReadKey().Key;
 
                 switch (key)
                 {
