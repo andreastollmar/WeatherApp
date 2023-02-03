@@ -8,7 +8,7 @@ namespace WeatherApp
 {
     internal class Enums
     {
-        public enum FirstMenu
+        public enum MainMenu
         {
             Indoor,
             Outdoor,
