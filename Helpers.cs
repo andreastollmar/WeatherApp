@@ -165,31 +165,43 @@ namespace WeatherApp
 
             List<string> tempData = new List<string>();
 
-            //foreach (string line in allData)
-            //{
-            //    Match match = regex.Match(line);
-
-            //    if (match.Success)
-            //    {
-            //        tempData.Add(match.Value);
-            //    }    
-            //}
-            int i = 0;
-            int matchCount = 0;
-            double avgTemp = 0;
             foreach (string line in allData)
             {
                 Match match = regex.Match(line);
-                if (regex.Match(allData[i]).Groups["date"].Equals(regex.Match(allData[i+1]).Groups["date"]))
+
+                if (match.Success)
                 {
-                    avgTemp += double.Parse((regex.Match(allData[i]).Groups["temp"]).Value);
-                    matchCount++;
+                    tempData.Add(match.Value);
+
                 }
-                else
+            }
+            int i = 0;
+            int matchCount = 0;
+            double avgTemp = 0;
+            Console.WriteLine(avgTemp);
+            foreach (string line in tempData)
+            {
+                Match match = regex.Match(line);
+                if (match.Success)
                 {
-                    Console.WriteLine(regex.Match(allData[i]).Groups["date"] + " " + (avgTemp / matchCount));
-                    matchCount = 0;
-                }
+                    
+                    string dateOne = match.Groups["date"].Value;                    
+                    string dateTwo = regex.Match(tempData[i+1]).Groups["date"].Value;
+
+                    if (dateOne == dateTwo)
+                    {
+                        string nr = regex.Match(tempData[i]).Groups["temp"].Value.Replace(".", ",");
+                        avgTemp += double.Parse(nr);
+                        matchCount++;
+                    }
+                    else
+                    {
+                        Console.WriteLine(regex.Match(tempData[i]).Groups["date"] + " " + Math.Round((avgTemp / matchCount), 2).ToString());
+                        matchCount = 0;
+                        avgTemp= 0;
+                    }
+                }              
+                
                 i++;
             }
 
