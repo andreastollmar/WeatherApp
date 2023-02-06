@@ -156,28 +156,27 @@ namespace WeatherApp
             }
         }
 
-        public static void FetchData()
-        {
+        public static List<string> FetchData(string inorout)
+        {            
             string path = "../../../tempdata5-med fel/tempdata5-med fel.txt";
-            string pattern = "^([0-9]{4})-([0-1][0-9])-([0-3][0-9])\\s([0-2][0-9]:[0-5][0-9]:[0-5][0-5]),(Inne),([0-9][0-9]*.[0-9]),([0-9][0-9]*)$";
-            Regex regex = new Regex(pattern);
-            List<string> indoorData = new List<string>();
+            string pattern = @"^([0-9]{4})-([0-1][0-9])-([0-3][0-9])\s([0-2][0-9]:[0-5][0-9]:[0-5][0-9]),"+ inorout + ",([0-9][0-9]*.[0-9]),([0-9][0-9]*)$";
+            Regex regex = new Regex(pattern);            
             var allData = File.ReadAllLines(path);            
-            MatchCollection matches;
-            int i = 0;
+            
+            List<string> tempData = new List<string>();            
+           
             foreach (string line in allData)
             {
-                matches = regex.Matches(allData[i]);                
-                i++;
+                Match match = regex.Match(line);
+
+                if (match.Success)
+                {
+                    tempData.Add(match.Value);
+                }    
             }
             Console.WriteLine("");
-            
-            
 
-
-
-
-            Console.WriteLine();
+            return tempData;            
         }
 
     }

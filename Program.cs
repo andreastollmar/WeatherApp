@@ -6,8 +6,9 @@
         {
             //string[] test = new string[3];
             //var mainMenuEnums = (Enum.GetNames(typeof(Enums.OutDoorMenu))); // returnar en array med allt innehåll. Funkar utmärkt för detta
-            Helpers.FetchData();
+            List <string> data = Helpers.FetchData("Inne");
             //Helpers.DisplayMainMenu();
+            Console.WriteLine();
             
             //int choice = Helpers.MultipleChoice(true, mainMenuEnums);
             //Console.WriteLine(choice);
