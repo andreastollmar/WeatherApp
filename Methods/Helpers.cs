@@ -158,25 +158,8 @@ namespace WeatherApp.Methods
             }
         }
 
-        public static List<string> FetchData(string inorout)
+        private static void SortByTemp()
         {
-            string path = "../../../tempdata5-med fel/tempdata5-med fel.txt";
-            string pattern = @"^(?<date>[0-9]{4}-[0-1][0-9]-[0-3][0-9])\s([0-2][0-9]:[0-5][0-9]:[0-5][0-9])," + inorout + ",(?<temp>[0-9][0-9]*.[0-9]),(?<humidity>[0-9][0-9]*)$";
-            Regex regex = new Regex(pattern);
-            var allData = File.ReadAllLines(path);
-
-            List<string> tempData = new List<string>();
-
-            foreach (string line in allData)
-            {
-                Match match = regex.Match(line);
-
-                if (match.Success)
-                {
-                    tempData.Add(match.Value);
-
-                }
-            }
             int i = 0;
             int matchCount = 0;
             double avgTemp = 0;
