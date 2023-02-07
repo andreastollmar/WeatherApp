@@ -5,7 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace WeatherApp
+namespace WeatherApp.Methods
 {
     internal class Helpers
     {
@@ -28,7 +28,7 @@ namespace WeatherApp
 
                 for (int i = 0; i < options.Length; i++)
                 {
-                    Console.SetCursorPosition(startX + (i % optionsPerLine) * spacingPerLine, startY + i / optionsPerLine);
+                    Console.SetCursorPosition(startX + i % optionsPerLine * spacingPerLine, startY + i / optionsPerLine);
 
                     if (i == currentSelection)
                         Console.ForegroundColor = ConsoleColor.Red;
@@ -102,7 +102,7 @@ namespace WeatherApp
         }
         public static void DisplayIndoorMenu()
         {
-            var indoorMenuArray = (Enum.GetNames(typeof(Enums.IndoorMenu)));
+            var indoorMenuArray = Enum.GetNames(typeof(Enums.IndoorMenu));
             int choice = MultipleChoice(false, indoorMenuArray);
             switch (choice)
             {
@@ -126,7 +126,7 @@ namespace WeatherApp
         }
         public static void DisplayOutdoorMenu()
         {
-            var outdoorMenuArray = (Enum.GetNames(typeof(Enums.OutDoorMenu)));
+            var outdoorMenuArray = Enum.GetNames(typeof(Enums.OutDoorMenu));
             int choice = MultipleChoice(false, outdoorMenuArray);
 
             switch (choice)
@@ -184,9 +184,9 @@ namespace WeatherApp
                 Match match = regex.Match(line);
                 if (match.Success)
                 {
-                    
-                    string dateOne = match.Groups["date"].Value;                    
-                    string dateTwo = regex.Match(tempData[i+1]).Groups["date"].Value;
+
+                    string dateOne = match.Groups["date"].Value;
+                    string dateTwo = regex.Match(tempData[i + 1]).Groups["date"].Value;
 
                     if (dateOne == dateTwo)
                     {
@@ -196,12 +196,12 @@ namespace WeatherApp
                     }
                     else
                     {
-                        Console.WriteLine(regex.Match(tempData[i]).Groups["date"] + " " + Math.Round((avgTemp / matchCount), 2).ToString());
+                        Console.WriteLine(regex.Match(tempData[i]).Groups["date"] + " " + Math.Round(avgTemp / matchCount, 2).ToString());
                         matchCount = 0;
-                        avgTemp= 0;
+                        avgTemp = 0;
                     }
-                }              
-                
+                }
+
                 i++;
             }
 
