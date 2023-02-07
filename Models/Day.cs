@@ -8,7 +8,7 @@ namespace WeatherApp.Models
 {
     internal class Day
     {
-        public int DayNumber { get; set; }
+        public string Date { get; set; }
         public double AvgTemp { get; set; }
         public double AvgHumidity { get; set; }
         public int HighestTemp { get; set; }
