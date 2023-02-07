@@ -159,7 +159,7 @@ namespace WeatherApp
         public static List<string> FetchData(string inorout)
         {
             string path = "../../../tempdata5-med fel/tempdata5-med fel.txt";
-            string pattern = @"^(?<date>[0-9]{4}-[0-1][0-9]-[0-3][0-9])\s([0-2][0-9]:[0-5][0-9]:[0-5][0-9])," + inorout + ",(?<temp>[0-9][0-9]*.[0-9]),(?<humidity>[0-9][0-9]*)$";
+            string pattern = @"^(?<date>[0-9]{4}-(0[0-9]|1[0-2])-([0-2][0-9]|3[0-1]))\s([0-2][0-9]:[0-5][0-9]:[0-5][0-9])," + inorout + ",(?<temp>[0-9][0-9]*.[0-9]),(?<humidity>[0-9][0-9]*)$";
             Regex regex = new Regex(pattern);
             var allData = File.ReadAllLines(path);
 
@@ -184,10 +184,15 @@ namespace WeatherApp
                 Match match = regex.Match(line);
                 if (match.Success)
                 {
-                    
-                    string dateOne = match.Groups["date"].Value;                    
-                    string dateTwo = regex.Match(tempData[i+1]).Groups["date"].Value;
 
+
+                    string dateOne = match.Groups["date"].Value;
+                    string dateTwo = "";
+                    try
+                    { dateTwo = regex.Match(tempData[i-1]).Groups["date"].Value; }
+                    catch { }
+                    
+                    //if (i + 1 > tempData[i].Length)
                     if (dateOne == dateTwo)
                     {
                         string nr = regex.Match(tempData[i]).Groups["temp"].Value.Replace(".", ",");
