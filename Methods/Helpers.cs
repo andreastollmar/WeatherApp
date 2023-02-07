@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using WeatherApp.Models;
 
 namespace WeatherApp.Methods
 {
@@ -158,10 +161,10 @@ namespace WeatherApp.Methods
             }
         }
 
-        public static List<string> FetchData(string inorout)
+        public static List<string> FetchData(string inOrOut)
         {
             string path = "../../../tempdata5-med fel/tempdata5-med fel.txt";
-            string pattern = @"^(?<date>[0-9]{4}-[0-1][0-9]-[0-3][0-9])\s([0-2][0-9]:[0-5][0-9]:[0-5][0-9])," + inorout + ",(?<temp>[0-9][0-9]*.[0-9]),(?<humidity>[0-9][0-9]*)$";
+            string pattern = @"^(?<date>[0-9]{4}-[0-1][0-9]-[0-3][0-9])\s([0-2][0-9]:[0-5][0-9]:[0-5][0-9])," + inOrOut + ",(?<temp>[0-9][0-9]*.[0-9]),(?<humidity>[0-9][0-9]*)$";
             Regex regex = new Regex(pattern);
             var allData = File.ReadAllLines(path);
 
@@ -173,47 +176,30 @@ namespace WeatherApp.Methods
 
                 if (match.Success)
                 {
-                    tempData.Add(match.Value);
+                    int dayCheck = int.Parse(match.Groups["date"].Value.Substring(8, 2));
+                    int monthCheck = int.Parse(match.Groups["date"].Value.Substring(5, 2));
+                    int yearCheck = int.Parse(match.Groups["date"].Value.Substring(0, 4));
+                    if (dayCheck < 32 && monthCheck > 5 && monthCheck < 13 && yearCheck == 2016)
+                    {
+                        tempData.Add(match.Value);
+                    }
 
                 }
             }
-            int i = 0;
-            int matchCount = 0;
-            double avgTemp = 0;
-            Console.WriteLine(avgTemp);
-            foreach (string line in tempData)
-            {
-                Match match = regex.Match(line);
-                if (match.Success)
-                {
-
-                    string dateOne = match.Groups["date"].Value;
-                    string dateTwo = regex.Match(tempData[i + 1]).Groups["date"].Value;
-
-                    if (dateOne == dateTwo)
-                    {
-                        string nr = regex.Match(tempData[i]).Groups["temp"].Value.Replace(".", ",");
-                        avgTemp += double.Parse(nr);
-                        matchCount++;
-                    }
-                    else
-                    {
-                        Console.WriteLine(regex.Match(tempData[i]).Groups["date"] + " " + Math.Round(avgTemp / matchCount, 2).ToString());
-                        matchCount = 0;
-                        avgTemp = 0;
-                    }
-                }
-
-                i++;
-            }
-
             return tempData;
         }
-        private static void SortByTemp()
+
+
+        public static void SortByTemp(string inOrOut)
         {
+            List<string> tempData = FetchData(inOrOut);
+
+            string pattern = @"^(?<date>[0-9]{4}-[0-1][0-9]-[0-3][0-9])\s([0-2][0-9]:[0-5][0-9]:[0-5][0-9])," + inOrOut + ",(?<temp>[0-9][0-9]*.[0-9]),(?<humidity>[0-9][0-9]*)$";
+            Regex regex = new Regex(pattern);
             int i = 0;
             int matchCount = 0;
             double avgTemp = 0;
+            Month month = new Month();
             Console.WriteLine(avgTemp);
             foreach (string line in tempData)
             {
@@ -222,8 +208,15 @@ namespace WeatherApp.Methods
                 {
 
                     string dateOne = match.Groups["date"].Value;
-                    string dateTwo = regex.Match(tempData[i + 1]).Groups["date"].Value;
+                    string dateTwo = "";
 
+                    try { dateTwo = regex.Match(tempData[i + 1]).Groups["date"].Value; }
+                    catch 
+                    {
+                        string nr = regex.Match(tempData[i]).Groups["temp"].Value.Replace(".", ",");
+                        avgTemp += double.Parse(nr);
+                        matchCount++;                      
+                    }
                     if (dateOne == dateTwo)
                     {
                         string nr = regex.Match(tempData[i]).Groups["temp"].Value.Replace(".", ",");
@@ -232,7 +225,8 @@ namespace WeatherApp.Methods
                     }
                     else
                     {
-                        Console.WriteLine(regex.Match(tempData[i]).Groups["date"] + " " + Math.Round(avgTemp / matchCount, 2).ToString());
+                        //Console.WriteLine(regex.Match(tempData[i]).Groups["date"] + " " + Math.Round(avgTemp / matchCount, 2).ToString());
+                        month.Days.Add(new Day { AvgTemp = Math.Round(avgTemp / matchCount,1), DayNumber = match.Groups["date"].Value });
                         matchCount = 0;
                         avgTemp = 0;
                     }
@@ -240,8 +234,11 @@ namespace WeatherApp.Methods
 
                 i++;
             }
-
-            return tempData;
+            foreach(var m in month.Days.OrderByDescending(x => x.AvgTemp)) 
+            {
+                Console.WriteLine($"{m.DayNumber} {m.AvgTemp}");
+            }
+            Console.ReadKey();
         }
 
         private static void DisplayDataForDay(string date, string prefix)
@@ -266,7 +263,7 @@ namespace WeatherApp.Methods
                     counter++;
                 }
             }
-            Console.WriteLine(date + " average temp: " + Math.Round((avgTemp / counter), 2) + " average humidity: " + Math.Round((avgHumidity / counter), 2) );
+            Console.WriteLine(date + " average temp: " + Math.Round((avgTemp / counter), 2) + " average humidity: " + Math.Round((avgHumidity / counter), 2));
         }
 
     }
