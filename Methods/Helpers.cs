@@ -107,7 +107,8 @@ namespace WeatherApp.Methods
             switch (choice)
             {
                 case 0:
-                    ValidateData.ValidateDate("Enter Date to search: ");
+                    string input = ValidateData.ValidateDate("Enter Date to search: ");
+                    DisplayDataForDay(input, "Inne");
                     break;
                 case 1:
                     Console.WriteLine("Sort by temp");
@@ -132,7 +133,8 @@ namespace WeatherApp.Methods
             switch (choice)
             {
                 case 0:
-                    Console.WriteLine("SearchFor");
+                    string input = ValidateData.ValidateDate("Enter Date to search: ");
+                    DisplayDataForDay(input, "Ute");
                     break;
                 case 1:
                     Console.WriteLine("Sort by temp");
@@ -206,6 +208,31 @@ namespace WeatherApp.Methods
             }
 
             return tempData;
+        }
+
+        private static void DisplayDataForDay(string date, string prefix)
+        {
+            string path = "../../../tempdata5-med fel/tempdata5-med fel.txt";
+            string pattern = @"" + date + " ([0-2][0-9]:[0-5][0-9]:[0-5][0-9])," + prefix + ",(?<temp>[0-9][0-9]*.[0-9]),(?<humidity>[0-9][0-9]*)$";
+            Regex regex = new Regex(pattern);
+            var allData = File.ReadAllLines(path);
+            double avgTemp = 0;
+            double avgHumidity = 0;
+            int counter = 0;
+
+            foreach (string line in allData)
+            {
+                Match match = regex.Match(line);
+
+                if (match.Success)
+                {
+                    string temp = match.Groups["temp"].Value.Replace(".", ",");
+                    avgTemp += double.Parse(temp);
+                    avgHumidity += double.Parse(match.Groups["humidity"].Value);
+                    counter++;
+                }
+            }
+            Console.WriteLine(date + " average temp: " + Math.Round((avgTemp / counter), 2) + " average humidity: " + Math.Round((avgHumidity / counter), 2) );
         }
 
     }
