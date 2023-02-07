@@ -107,7 +107,7 @@ namespace WeatherApp.Methods
             switch (choice)
             {
                 case 0:
-                    Console.WriteLine("SearchFor");
+                    ValidateData.ValidateDate("Enter Date to search: ");
                     break;
                 case 1:
                     Console.WriteLine("Sort by temp");
