@@ -11,6 +11,7 @@ namespace WeatherApp.Models
         public string Date { get; set; }
         public double AvgTemp { get; set; }
         public double AvgHumidity { get; set; }
+        public double HumidityIndex { get; set; }
         public int HighestTemp { get; set; }
         public int LowestTemp { get; set; }
         public int DayCounter { get; set; }

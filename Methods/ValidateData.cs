@@ -24,7 +24,7 @@ namespace WeatherApp.Methods
 
         private static bool IsValidDate(string input)
         {
-            string pattern = @"2016-(0?[0-9]|1?[1-2])-(0-2[0-9]|3[0-1])";
+            string pattern = @"^(\d{4})-(0[0-9]|1[0-2])-([0-2][0-9]|3[0-1])";
             return Regex.IsMatch(input, pattern);
 
         }

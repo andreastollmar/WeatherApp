@@ -105,17 +105,20 @@ namespace WeatherApp.Methods
         {
             var indoorMenuArray = Enum.GetNames(typeof(Enums.IndoorMenu));
             int choice = MultipleChoice(false, indoorMenuArray);
+            List<Day> days = SortData("Inne");
             switch (choice)
             {
+                
                 case 0:
                     string input = ValidateData.ValidateDate("Enter Date to search: ");
                     DisplayDataForDay(input, "Inne");
                     break;
                 case 1:
-                    Console.WriteLine("Sort by temp");
+                    Console.Clear();                    
+                    DisplayTemp(days);
                     break;
                 case 2:
-                    Console.WriteLine("Sort by humidity");
+                    DisplayHumidity(days);
                     break;
                 case 3:
                     Console.WriteLine("Sort by risk for mold");
@@ -128,6 +131,7 @@ namespace WeatherApp.Methods
         }
         public static void DisplayOutdoorMenu()
         {
+            List<Day> days = SortData("Ute");
             var outdoorMenuArray = Enum.GetNames(typeof(Enums.OutDoorMenu));
             int choice = MultipleChoice(false, outdoorMenuArray);
 
@@ -138,10 +142,10 @@ namespace WeatherApp.Methods
                     DisplayDataForDay(input, "Ute");
                     break;
                 case 1:
-                    Console.WriteLine("Sort by temp");
+                    DisplayTemp(days);
                     break;
                 case 2:
-                    Console.WriteLine("Sort by humidity");
+                    DisplayHumidity(days);
                     break;
                 case 3:
                     Console.WriteLine("Sort by risk for mold");
@@ -188,7 +192,7 @@ namespace WeatherApp.Methods
         }
 
 
-        public static void SortByTemp(string inOrOut)
+        public static List<Day> SortData(string inOrOut)
         {
             List<string> tempData = FetchData(inOrOut);
 
@@ -197,8 +201,8 @@ namespace WeatherApp.Methods
             int i = 0;
             int matchCount = 0;
             double avgTemp = 0;
-            Month month = new Month();
-            Console.WriteLine(avgTemp);
+            double avgHumidity = 0;
+            Month month = new Month();            
             foreach (string line in tempData)
             {
                 Match match = regex.Match(line);
@@ -212,34 +216,36 @@ namespace WeatherApp.Methods
                     catch
                     {
                         string nr = regex.Match(tempData[i]).Groups["temp"].Value.Replace(".", ",");
+                        string humidity = regex.Match(tempData[i]).Groups["humidity"].Value;
                         avgTemp += double.Parse(nr);
+                        avgHumidity+= double.Parse(humidity);
                         matchCount++;
                     }
                     if (dateOne == dateTwo)
                     {
                         string nr = regex.Match(tempData[i]).Groups["temp"].Value.Replace(".", ",");
+                        string humidity = regex.Match(tempData[i]).Groups["humidity"].Value;
                         avgTemp += double.Parse(nr);
+                        avgHumidity += double.Parse(humidity);
                         matchCount++;
                     }
                     else
                     {
                         //Console.WriteLine(regex.Match(tempData[i]).Groups["date"] + " " + Math.Round(avgTemp / matchCount, 2).ToString());
-                        month.Days.Add(new Day { AvgTemp = Math.Round(avgTemp / matchCount, 1), Date = match.Groups["date"].Value });
+                        month.Days.Add(new Day { AvgTemp = Math.Round(avgTemp / matchCount, 1), AvgHumidity = Math.Round((avgHumidity / matchCount), 2) ,Date = match.Groups["date"].Value });
                         matchCount = 0;
                         avgTemp = 0;
+                        avgHumidity = 0;
                     }
                 }
-
                 i++;
             }
-            foreach (var m in month.Days.OrderByDescending(x => x.AvgTemp))
-            {
-                Console.WriteLine($"{m.Date} {m.AvgTemp}");
-            }
+            
             Console.ReadKey();
+            return month.Days;
         }
 
-        private static void DisplayDataForDay(string date, string prefix)
+        public static void DisplayDataForDay(string date, string prefix)
         {
             string path = "../../../tempdata5-med fel/tempdata5-med fel.txt";
             string pattern = @"" + date + " ([0-2][0-9]:[0-5][0-9]:[0-5][0-9])," + prefix + ",(?<temp>[0-9][0-9]*.[0-9]),(?<humidity>[0-9][0-9]*)$";
@@ -248,6 +254,7 @@ namespace WeatherApp.Methods
             double avgTemp = 0;
             double avgHumidity = 0;
             int counter = 0;
+            bool success = false;
 
             foreach (string line in allData)
             {
@@ -259,9 +266,46 @@ namespace WeatherApp.Methods
                     avgTemp += double.Parse(temp);
                     avgHumidity += double.Parse(match.Groups["humidity"].Value);
                     counter++;
+                    success = true;
                 }
             }
-            Console.WriteLine(date + " average temp: " + Math.Round((avgTemp / counter), 2) + " average humidity: " + Math.Round((avgHumidity / counter), 2) );
+            if (success)
+            {
+                Console.WriteLine(date + " Average temp: " + Math.Round((avgTemp / counter), 2) + " Average humidity: " + Math.Round((avgHumidity / counter), 2) );
+            }
+            else
+            {
+                Console.WriteLine("No data for that date");
+            }
+        }
+
+        private static void DisplayHumidity(List<Day> days)
+        {
+            foreach (var m in days.OrderByDescending(x => x.AvgHumidity))
+            {
+                Console.WriteLine($"{m.Date} {m.AvgHumidity}");
+            }
+        }
+        private static void DisplayTemp(List<Day> days)
+        {
+            foreach (var m in days.OrderByDescending(x => x.AvgTemp))
+            {
+                Console.WriteLine($"{m.Date} {m.AvgTemp}");
+            }
+        }
+        private static void MoldIndexCounter(List<Day> days)
+        {
+
+            // Mattematik 
+
+        }
+        private static void MetrologicalWinter()
+        {
+
+        }
+        private static void MetrologicalFall()
+        {
+
         }
 
     }
