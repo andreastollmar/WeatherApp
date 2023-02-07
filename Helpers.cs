@@ -135,7 +135,7 @@ namespace WeatherApp
                     Console.WriteLine("SearchFor");
                     break;
                 case 1:
-                    Console.WriteLine("Sort by temp");
+                    SortByTemp();
                     break;
                 case 2:
                     Console.WriteLine("Sort by humidity");
@@ -153,6 +153,52 @@ namespace WeatherApp
                     DisplayMainMenu();
                     break;
 
+            }
+        }
+
+        private static void SortByTemp(List<string> tempdata)
+        {
+            int i = 0;
+            int matchCount = 0;
+            double avgTemp = 0;
+            Console.WriteLine(avgTemp);
+            foreach (string line in tempData)
+            {
+                Match match = regex.Match(line);
+                if (match.Success)
+                {
+
+
+                    string dateOne = match.Groups["date"].Value;
+                    string dateTwo = "";
+                    try
+                    {
+                        dateTwo = regex.Match(tempData[i + 1]).Groups["date"].Value;
+                    }
+                    catch
+                    {
+                        dateTwo = regex.Match(tempData[i - 1]).Groups["date"].Value;
+                        Console.WriteLine(regex.Match(tempData[i]).Groups["date"] + " " + Math.Round((avgTemp / matchCount), 2).ToString());
+                        matchCount = 0;
+                        avgTemp = 0;
+                    }
+
+                    if (dateOne == dateTwo)
+                    {
+                        string nr = regex.Match(tempData[i]).Groups["temp"].Value.Replace(".", ",");
+                        avgTemp += double.Parse(nr);
+                        matchCount++;
+                    }
+                    else
+                    {
+                        Console.WriteLine(regex.Match(tempData[i]).Groups["date"] + " " + Math.Round((avgTemp / matchCount), 2).ToString());
+                        matchCount = 0;
+                        avgTemp = 0;
+                    }
+
+                }
+
+                i++;
             }
         }
 
@@ -175,41 +221,6 @@ namespace WeatherApp
 
                 }
             }
-            int i = 0;
-            int matchCount = 0;
-            double avgTemp = 0;
-            Console.WriteLine(avgTemp);
-            foreach (string line in tempData)
-            {
-                Match match = regex.Match(line);
-                if (match.Success)
-                {
-
-
-                    string dateOne = match.Groups["date"].Value;
-                    string dateTwo = "";
-                    try
-                    { dateTwo = regex.Match(tempData[i-1]).Groups["date"].Value; }
-                    catch { }
-                    
-                    //if (i + 1 > tempData[i].Length)
-                    if (dateOne == dateTwo)
-                    {
-                        string nr = regex.Match(tempData[i]).Groups["temp"].Value.Replace(".", ",");
-                        avgTemp += double.Parse(nr);
-                        matchCount++;
-                    }
-                    else
-                    {
-                        Console.WriteLine(regex.Match(tempData[i]).Groups["date"] + " " + Math.Round((avgTemp / matchCount), 2).ToString());
-                        matchCount = 0;
-                        avgTemp= 0;
-                    }
-                }              
-                
-                i++;
-            }
-
             return tempData;
         }
 
