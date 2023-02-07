@@ -9,7 +9,7 @@ namespace WeatherApp.Methods
 {
     internal class ValidateData
     {
-        public static void ValidateDate(string promt)
+        public static string ValidateDate(string promt)
         {
             Console.WriteLine(promt);
             var input = Console.ReadLine();
@@ -19,7 +19,7 @@ namespace WeatherApp.Methods
                 input = Console.ReadLine();
             }
             // Kör nästa method som letar upp alla matches med datumet inläst från användare
-
+            return input;
         }
 
         private static bool IsValidDate(string input)
