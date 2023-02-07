@@ -1,4 +1,6 @@
-﻿namespace WeatherApp
+﻿using WeatherApp.Methods;
+
+namespace WeatherApp
 {
     internal class Program
     {
