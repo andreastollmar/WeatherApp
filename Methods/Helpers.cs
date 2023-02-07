@@ -5,7 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace WeatherApp
+namespace WeatherApp.Methods
 {
     internal class Helpers
     {
@@ -28,7 +28,7 @@ namespace WeatherApp
 
                 for (int i = 0; i < options.Length; i++)
                 {
-                    Console.SetCursorPosition(startX + (i % optionsPerLine) * spacingPerLine, startY + i / optionsPerLine);
+                    Console.SetCursorPosition(startX + i % optionsPerLine * spacingPerLine, startY + i / optionsPerLine);
 
                     if (i == currentSelection)
                         Console.ForegroundColor = ConsoleColor.Red;
@@ -102,12 +102,13 @@ namespace WeatherApp
         }
         public static void DisplayIndoorMenu()
         {
-            var indoorMenuArray = (Enum.GetNames(typeof(Enums.IndoorMenu)));
+            var indoorMenuArray = Enum.GetNames(typeof(Enums.IndoorMenu));
             int choice = MultipleChoice(false, indoorMenuArray);
             switch (choice)
             {
                 case 0:
-                    Console.WriteLine("SearchFor");
+                    string input = ValidateData.ValidateDate("Enter Date to search: ");
+                    DisplayDataForDay(input, "Inne");
                     break;
                 case 1:
                     Console.WriteLine("Sort by temp");
@@ -126,16 +127,17 @@ namespace WeatherApp
         }
         public static void DisplayOutdoorMenu()
         {
-            var outdoorMenuArray = (Enum.GetNames(typeof(Enums.OutDoorMenu)));
+            var outdoorMenuArray = Enum.GetNames(typeof(Enums.OutDoorMenu));
             int choice = MultipleChoice(false, outdoorMenuArray);
 
             switch (choice)
             {
                 case 0:
-                    Console.WriteLine("SearchFor");
+                    string input = ValidateData.ValidateDate("Enter Date to search: ");
+                    DisplayDataForDay(input, "Ute");
                     break;
                 case 1:
-                    SortByTemp();
+                    Console.WriteLine("Sort by temp");
                     break;
                 case 2:
                     Console.WriteLine("Sort by humidity");
@@ -156,56 +158,10 @@ namespace WeatherApp
             }
         }
 
-        private static void SortByTemp(List<string> tempdata)
-        {
-            int i = 0;
-            int matchCount = 0;
-            double avgTemp = 0;
-            Console.WriteLine(avgTemp);
-            foreach (string line in tempData)
-            {
-                Match match = regex.Match(line);
-                if (match.Success)
-                {
-
-
-                    string dateOne = match.Groups["date"].Value;
-                    string dateTwo = "";
-                    try
-                    {
-                        dateTwo = regex.Match(tempData[i + 1]).Groups["date"].Value;
-                    }
-                    catch
-                    {
-                        dateTwo = regex.Match(tempData[i - 1]).Groups["date"].Value;
-                        Console.WriteLine(regex.Match(tempData[i]).Groups["date"] + " " + Math.Round((avgTemp / matchCount), 2).ToString());
-                        matchCount = 0;
-                        avgTemp = 0;
-                    }
-
-                    if (dateOne == dateTwo)
-                    {
-                        string nr = regex.Match(tempData[i]).Groups["temp"].Value.Replace(".", ",");
-                        avgTemp += double.Parse(nr);
-                        matchCount++;
-                    }
-                    else
-                    {
-                        Console.WriteLine(regex.Match(tempData[i]).Groups["date"] + " " + Math.Round((avgTemp / matchCount), 2).ToString());
-                        matchCount = 0;
-                        avgTemp = 0;
-                    }
-
-                }
-
-                i++;
-            }
-        }
-
         public static List<string> FetchData(string inorout)
         {
             string path = "../../../tempdata5-med fel/tempdata5-med fel.txt";
-            string pattern = @"^(?<date>[0-9]{4}-(0[0-9]|1[0-2])-([0-2][0-9]|3[0-1]))\s([0-2][0-9]:[0-5][0-9]:[0-5][0-9])," + inorout + ",(?<temp>[0-9][0-9]*.[0-9]),(?<humidity>[0-9][0-9]*)$";
+            string pattern = @"^(?<date>[0-9]{4}-[0-1][0-9]-[0-3][0-9])\s([0-2][0-9]:[0-5][0-9]:[0-5][0-9])," + inorout + ",(?<temp>[0-9][0-9]*.[0-9]),(?<humidity>[0-9][0-9]*)$";
             Regex regex = new Regex(pattern);
             var allData = File.ReadAllLines(path);
 
@@ -221,7 +177,96 @@ namespace WeatherApp
 
                 }
             }
+            int i = 0;
+            int matchCount = 0;
+            double avgTemp = 0;
+            Console.WriteLine(avgTemp);
+            foreach (string line in tempData)
+            {
+                Match match = regex.Match(line);
+                if (match.Success)
+                {
+
+                    string dateOne = match.Groups["date"].Value;
+                    string dateTwo = regex.Match(tempData[i + 1]).Groups["date"].Value;
+
+                    if (dateOne == dateTwo)
+                    {
+                        string nr = regex.Match(tempData[i]).Groups["temp"].Value.Replace(".", ",");
+                        avgTemp += double.Parse(nr);
+                        matchCount++;
+                    }
+                    else
+                    {
+                        Console.WriteLine(regex.Match(tempData[i]).Groups["date"] + " " + Math.Round(avgTemp / matchCount, 2).ToString());
+                        matchCount = 0;
+                        avgTemp = 0;
+                    }
+                }
+
+                i++;
+            }
+
             return tempData;
+        }
+        private static void SortByTemp()
+        {
+            int i = 0;
+            int matchCount = 0;
+            double avgTemp = 0;
+            Console.WriteLine(avgTemp);
+            foreach (string line in tempData)
+            {
+                Match match = regex.Match(line);
+                if (match.Success)
+                {
+
+                    string dateOne = match.Groups["date"].Value;
+                    string dateTwo = regex.Match(tempData[i + 1]).Groups["date"].Value;
+
+                    if (dateOne == dateTwo)
+                    {
+                        string nr = regex.Match(tempData[i]).Groups["temp"].Value.Replace(".", ",");
+                        avgTemp += double.Parse(nr);
+                        matchCount++;
+                    }
+                    else
+                    {
+                        Console.WriteLine(regex.Match(tempData[i]).Groups["date"] + " " + Math.Round(avgTemp / matchCount, 2).ToString());
+                        matchCount = 0;
+                        avgTemp = 0;
+                    }
+                }
+
+                i++;
+            }
+
+            return tempData;
+        }
+
+        private static void DisplayDataForDay(string date, string prefix)
+        {
+            string path = "../../../tempdata5-med fel/tempdata5-med fel.txt";
+            string pattern = @"" + date + " ([0-2][0-9]:[0-5][0-9]:[0-5][0-9])," + prefix + ",(?<temp>[0-9][0-9]*.[0-9]),(?<humidity>[0-9][0-9]*)$";
+            Regex regex = new Regex(pattern);
+            var allData = File.ReadAllLines(path);
+            double avgTemp = 0;
+            double avgHumidity = 0;
+            int counter = 0;
+
+            foreach (string line in allData)
+            {
+                Match match = regex.Match(line);
+
+                if (match.Success)
+                {
+                    string temp = match.Groups["temp"].Value.Replace(".", ",");
+                    avgTemp += double.Parse(temp);
+                    avgHumidity += double.Parse(match.Groups["humidity"].Value);
+                    counter++;
+                }
+            }
+            Console.WriteLine(date + " average temp: " + Math.Round((avgTemp / counter), 2) + " average humidity: " + Math.Round((avgHumidity / counter), 2) );
         }
 
     }
