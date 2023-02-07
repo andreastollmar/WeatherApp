@@ -158,6 +158,57 @@ namespace WeatherApp.Methods
             }
         }
 
+        public static List<string> FetchData(string inorout)
+        {
+            string path = "../../../tempdata5-med fel/tempdata5-med fel.txt";
+            string pattern = @"^(?<date>[0-9]{4}-[0-1][0-9]-[0-3][0-9])\s([0-2][0-9]:[0-5][0-9]:[0-5][0-9])," + inorout + ",(?<temp>[0-9][0-9]*.[0-9]),(?<humidity>[0-9][0-9]*)$";
+            Regex regex = new Regex(pattern);
+            var allData = File.ReadAllLines(path);
+
+            List<string> tempData = new List<string>();
+
+            foreach (string line in allData)
+            {
+                Match match = regex.Match(line);
+
+                if (match.Success)
+                {
+                    tempData.Add(match.Value);
+
+                }
+            }
+            int i = 0;
+            int matchCount = 0;
+            double avgTemp = 0;
+            Console.WriteLine(avgTemp);
+            foreach (string line in tempData)
+            {
+                Match match = regex.Match(line);
+                if (match.Success)
+                {
+
+                    string dateOne = match.Groups["date"].Value;
+                    string dateTwo = regex.Match(tempData[i + 1]).Groups["date"].Value;
+
+                    if (dateOne == dateTwo)
+                    {
+                        string nr = regex.Match(tempData[i]).Groups["temp"].Value.Replace(".", ",");
+                        avgTemp += double.Parse(nr);
+                        matchCount++;
+                    }
+                    else
+                    {
+                        Console.WriteLine(regex.Match(tempData[i]).Groups["date"] + " " + Math.Round(avgTemp / matchCount, 2).ToString());
+                        matchCount = 0;
+                        avgTemp = 0;
+                    }
+                }
+
+                i++;
+            }
+
+            return tempData;
+        }
         private static void SortByTemp()
         {
             int i = 0;
