@@ -416,9 +416,9 @@ namespace WeatherApp.Methods
                     }
                     else
                     {
-                        avgTemp /= count; // runda av decimaler 
-                        avgHumidity /= count;
-                        avgMoldRisk /= count;
+                        avgTemp = Math.Round((avgTemp/ count), 2); // runda av decimaler 
+                        avgHumidity = Math.Round((avgHumidity / count), 2);
+                        avgMoldRisk = Math.Round((avgMoldRisk / count), 2);
                         string statistics = $"Month: {dayOne}\tAverage temp: {avgTemp}\tAverage humidity: {avgHumidity}\tAverage mold risk index: {avgMoldRisk}\n";
                         File.AppendAllText(path + "Statistics.txt", statistics);
                         avgTemp = 0;
