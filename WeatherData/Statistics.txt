@@ -1,0 +1,14 @@
+Month: 06	Average temp: 24.635294117647057	Average humidity: 28.50588235294118	Average mold risk index: 0
+Month: 07	Average temp: 26.03333333333333	Average humidity: 44.78	Average mold risk index: 0
+Month: 08	Average temp: 25.3	Average humidity: 33.5	Average mold risk index: 0
+Month: 09	Average temp: 23.243478260869566	Average humidity: 41.20739130434782	Average mold risk index: 0
+Month: 10	Average temp: 22.39629629629629	Average humidity: 27.44851851851852	Average mold risk index: 0
+Month: 11	Average temp: 22.806896551724133	Average humidity: 19.145517241379316	Average mold risk index: 0
+Month: 12	Average temp: 21.778260869565216	Average humidity: 16.040869565217392	Average mold risk index: 0
+Month: 06	Average temp: 24.635294117647057	Average humidity: 28.50588235294118	Average mold risk index: 0
+Month: 07	Average temp: 26.03333333333333	Average humidity: 44.78	Average mold risk index: 0
+Month: 08	Average temp: 25.3	Average humidity: 33.5	Average mold risk index: 0
+Month: 09	Average temp: 23.243478260869566	Average humidity: 41.20739130434782	Average mold risk index: 0
+Month: 10	Average temp: 22.39629629629629	Average humidity: 27.44851851851852	Average mold risk index: 0
+Month: 11	Average temp: 22.806896551724133	Average humidity: 19.145517241379316	Average mold risk index: 0
+Month: 12	Average temp: 21.778260869565216	Average humidity: 16.040869565217392	Average mold risk index: 0

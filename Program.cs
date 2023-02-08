@@ -11,6 +11,7 @@ namespace WeatherApp
             //List <string> data = Helpers.FetchData("Ute");
             //Helpers.DisplayDataForDay("2016-10-18", "Inne");
             //Helpers.SortByTemp("Ute");)
+            Helpers.SaveToFile();
             Helpers.DisplayMainMenu();
             Console.WriteLine();
             

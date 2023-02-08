@@ -368,6 +368,71 @@ namespace WeatherApp.Methods
                 Console.WriteLine($"Fall starts on {fallDays[0].Date}");
             }
         }
+        public static void SaveToFile()
+        {
+            string path = "../../../WeatherData/";
+
+            // Medeltemp ute och inne per månad
+            // medelfuktighet ----||----
+            // medelmögelrisk -----||---
+            double avgTemp = 0;
+            double avgHumidity = 0;
+            double avgMoldRisk = 0;
+            int count = 0;
+
+            List<Day> indoorData = SortData("Inne");
+            List<Day> outdoorData = SortData("Ute");
+
+            for (int i = 0; i < indoorData.Count; i++)
+            {
+                if (i == 0)
+                {
+                    avgTemp += indoorData[i].AvgTemp;
+                    avgHumidity += indoorData[i].AvgHumidity;
+                    avgMoldRisk += indoorData[i].HumidityIndex;
+                    count++;
+                }
+                else
+                {
+                    string dayOne = indoorData[i].Date.Substring(5, 2);
+                    string dayTwo = "";
+                    try
+                    {
+                        dayTwo = indoorData[i + 1].Date.Substring(5, 2);
+                    }
+                    catch
+                    {
+                        avgTemp += indoorData[i].AvgTemp;
+                        avgHumidity += indoorData[i].AvgHumidity;
+                        avgMoldRisk += indoorData[i].HumidityIndex;
+                        count++;
+                    }
+                    if (dayOne == dayTwo)
+                    {
+                        avgTemp += indoorData[i].AvgTemp;
+                        avgHumidity += indoorData[i].AvgHumidity;
+                        avgMoldRisk += indoorData[i].HumidityIndex;
+                        count++;
+                    }
+                    else
+                    {
+                        avgTemp /= count; // runda av decimaler 
+                        avgHumidity /= count;
+                        avgMoldRisk /= count;
+                        string statistics = $"Month: {dayOne}\tAverage temp: {avgTemp}\tAverage humidity: {avgHumidity}\tAverage mold risk index: {avgMoldRisk}\n";
+                        File.AppendAllText(path + "Statistics.txt", statistics);
+                        avgTemp = 0;
+                        avgHumidity = 0;
+                        avgMoldRisk = 0;
+                        count = 0;
+                    }
+
+                }
+            }
+
+            // höst och vinter-datum 
+            // skriv ut mögelalgoritm 
+        }
     }
 }
 

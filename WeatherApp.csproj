@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <Folder Include="WeatherData\" />
+    <Folder Include="WeatherData\" />
   </ItemGroup>
 
 </Project>
