@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -80,89 +81,96 @@ namespace WeatherApp.Methods
 
             return currentSelection;
         }
-
-
         public static void DisplayMainMenu()
         {
-            var mainMenuArray = Enum.GetNames(typeof(Enums.MainMenu));
-            int choice = MultipleChoice(false, mainMenuArray);
-            switch (choice)
+            bool runMenu = true;
+            while (runMenu)
             {
-                case 0:
-                    DisplayIndoorMenu();
-                    break;
-                case 1:
-                    DisplayOutdoorMenu();
-                    break;
-                case 2:
-                    Console.WriteLine("Press any key to exit");
-                    Console.ReadLine();
-                    break;
+                var mainMenuArray = Enum.GetNames(typeof(Enums.MainMenu));
+                int choice = MultipleChoice(false, mainMenuArray);
+                switch (choice)
+                {
+                    case 0:
+                        DisplayIndoorMenu();
+                        break;
+                    case 1:
+                        DisplayOutdoorMenu();
+                        break;
+                    case 2:
+                        Console.WriteLine("Press any key to exit");
+                        Console.ReadLine();
+                        runMenu = false;
+                        break;
 
+                }
             }
         }
         public static void DisplayIndoorMenu()
         {
-            var indoorMenuArray = Enum.GetNames(typeof(Enums.IndoorMenu));
-            int choice = MultipleChoice(false, indoorMenuArray);
+            bool indoorMenu = true;
             List<Day> days = SortData("Inne");
-            switch (choice)
+            while (indoorMenu)
             {
-                
-                case 0:
-                    string input = ValidateData.ValidateDate("Enter Date to search: ");
-                    DisplayDataForDay(input, "Inne");
-                    break;
-                case 1:
-                    Console.Clear();                    
-                    DisplayTemp(days);
-                    break;
-                case 2:
-                    DisplayHumidity(days);
-                    break;
-                case 3:
-                    Console.WriteLine("Sort by risk for mold");
-                    break;
-                case 4:
-                    DisplayMainMenu();
-                    break;
+                var indoorMenuArray = Enum.GetNames(typeof(Enums.IndoorMenu));
+                int choice = MultipleChoice(false, indoorMenuArray);
+                switch (choice)
+                {
+                    case 0:
+                        string input = ValidateData.ValidateDate("Enter Date to search: ");
+                        DisplayDataForDay(input, "Inne");
+                        break;
+                    case 1:
+                        Console.Clear();
+                        DisplayTemp(days);
+                        break;
+                    case 2:
+                        DisplayHumidity(days);
+                        break;
+                    case 3:
+                        DisplayMoldRisk(days);
+                        break;
+                    case 4:
+                        indoorMenu = false;
+                        break;
 
+                }
             }
         }
         public static void DisplayOutdoorMenu()
         {
+            bool outdoorMenu = true;
             List<Day> days = SortData("Ute");
-            var outdoorMenuArray = Enum.GetNames(typeof(Enums.OutDoorMenu));
-            int choice = MultipleChoice(false, outdoorMenuArray);
-
-            switch (choice)
+            while (outdoorMenu)
             {
-                case 0:
-                    string input = ValidateData.ValidateDate("Enter Date to search: ");
-                    DisplayDataForDay(input, "Ute");
-                    break;
-                case 1:
-                    DisplayTemp(days);
-                    break;
-                case 2:
-                    DisplayHumidity(days);
-                    break;
-                case 3:
-                    Console.WriteLine("Sort by risk for mold");
-                    break;
-                case 4:
-                    Console.WriteLine("Show Meterological Fall");
-                    break;
-                case 5:
-                    Console.WriteLine("Show meterological Winter");
-                    break;
-                case 6:
-                    DisplayMainMenu();
-                    break;
-
+                var outdoorMenuArray = Enum.GetNames(typeof(Enums.OutDoorMenu));
+                int choice = MultipleChoice(false, outdoorMenuArray);
+                switch (choice)
+                {
+                    case 0:
+                        string input = ValidateData.ValidateDate("Enter Date to search: ");
+                        DisplayDataForDay(input, "Ute");
+                        break;
+                    case 1:
+                        DisplayTemp(days);
+                        break;
+                    case 2:
+                        DisplayHumidity(days);
+                        break;
+                    case 3:
+                        DisplayMoldRisk(days);
+                        break;
+                    case 4:
+                        Console.WriteLine("Show Meterological Fall");
+                        break;
+                    case 5:
+                        Console.WriteLine("Show meterological Winter");
+                        break;
+                    case 6:
+                        outdoorMenu = false;
+                        break;
+                }
             }
         }
-
         public static List<string> FetchData(string inOrOut)
         {
             string path = "../../../tempdata5-med fel/tempdata5-med fel.txt";
@@ -190,8 +198,6 @@ namespace WeatherApp.Methods
             }
             return tempData;
         }
-
-
         public static List<Day> SortData(string inOrOut)
         {
             List<string> tempData = FetchData(inOrOut);
@@ -202,7 +208,7 @@ namespace WeatherApp.Methods
             int matchCount = 0;
             double avgTemp = 0;
             double avgHumidity = 0;
-            Month month = new Month();            
+            Month month = new Month();
             foreach (string line in tempData)
             {
                 Match match = regex.Match(line);
@@ -217,22 +223,22 @@ namespace WeatherApp.Methods
                     {
                         string nr = regex.Match(tempData[i]).Groups["temp"].Value.Replace(".", ",");
                         string humidity = regex.Match(tempData[i]).Groups["humidity"].Value;
-                        avgTemp += double.Parse(nr);
-                        avgHumidity+= double.Parse(humidity);
+                        avgTemp += double.Parse(nr, CultureInfo.GetCultureInfo("sv-SE"));
+                        avgHumidity += double.Parse(humidity);
                         matchCount++;
                     }
                     if (dateOne == dateTwo)
                     {
                         string nr = regex.Match(tempData[i]).Groups["temp"].Value.Replace(".", ",");
                         string humidity = regex.Match(tempData[i]).Groups["humidity"].Value;
-                        avgTemp += double.Parse(nr);
+                        avgTemp += double.Parse(nr, CultureInfo.GetCultureInfo("sv-SE"));
                         avgHumidity += double.Parse(humidity);
                         matchCount++;
                     }
                     else
                     {
                         //Console.WriteLine(regex.Match(tempData[i]).Groups["date"] + " " + Math.Round(avgTemp / matchCount, 2).ToString());
-                        month.Days.Add(new Day { AvgTemp = Math.Round(avgTemp / matchCount, 1), AvgHumidity = Math.Round((avgHumidity / matchCount), 2) ,Date = match.Groups["date"].Value });
+                        month.Days.Add(new Day { AvgTemp = Math.Round(avgTemp / matchCount, 1), AvgHumidity = Math.Round((avgHumidity / matchCount), 2), Date = match.Groups["date"].Value });
                         matchCount = 0;
                         avgTemp = 0;
                         avgHumidity = 0;
@@ -240,7 +246,7 @@ namespace WeatherApp.Methods
                 }
                 i++;
             }
-            
+
             Console.ReadKey();
             return month.Days;
         }
@@ -271,7 +277,7 @@ namespace WeatherApp.Methods
             }
             if (success)
             {
-                Console.WriteLine(date + " Average temp: " + Math.Round((avgTemp / counter), 2) + " Average humidity: " + Math.Round((avgHumidity / counter), 2) );
+                Console.WriteLine(date + " Average temp: " + Math.Round((avgTemp / counter), 2) + " Average humidity: " + Math.Round((avgHumidity / counter), 2));
             }
             else
             {
@@ -293,11 +299,16 @@ namespace WeatherApp.Methods
                 Console.WriteLine($"{m.Date} {m.AvgTemp}");
             }
         }
-        private static void MoldIndexCounter(List<Day> days)
+        private static void DisplayMoldRisk(List<Day> days)
         {
-
-            // Mattematik 
-
+            foreach (var m in days)
+            {
+                m.CalculateMoldRisk();
+            }
+            foreach (var m in days.OrderByDescending(x => x.HumidityIndex).Take(20))
+            {
+                Console.WriteLine($"Date: {m.Date}\tTemperature: {m.AvgTemp}   \tHumidity: {m.AvgHumidity}\t\tMold risk index: {m.HumidityIndex}");
+            }
         }
         private static void MetrologicalWinter()
         {
