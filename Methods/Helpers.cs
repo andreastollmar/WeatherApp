@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -118,16 +119,20 @@ namespace WeatherApp.Methods
                     case 0:
                         string input = ValidateData.ValidateDate("Enter Date to search: ");
                         DisplayDataForDay(input, "Inne");
+                        Console.ReadKey();
                         break;
                     case 1:
                         Console.Clear();
                         DisplayTemp(days);
+                        Console.ReadKey();
                         break;
                     case 2:
                         DisplayHumidity(days);
+                        Console.ReadKey();
                         break;
                     case 3:
                         DisplayMoldRisk(days);
+                        Console.ReadKey();
                         break;
                     case 4:
                         indoorMenu = false;
@@ -149,21 +154,27 @@ namespace WeatherApp.Methods
                     case 0:
                         string input = ValidateData.ValidateDate("Enter Date to search: ");
                         DisplayDataForDay(input, "Ute");
+                        Console.ReadKey();
                         break;
                     case 1:
                         DisplayTemp(days);
+                        Console.ReadKey();
                         break;
                     case 2:
                         DisplayHumidity(days);
+                        Console.ReadKey();
                         break;
                     case 3:
                         DisplayMoldRisk(days);
+                        Console.ReadKey();
                         break;
                     case 4:
-                        Console.WriteLine("Show Meterological Fall");
+                        MetrologicalWinter(days);
+                        Console.ReadKey();
                         break;
                     case 5:
-                        Console.WriteLine("Show meterological Winter");
+                        MetrologicalFall(days);
+                        Console.ReadKey();
                         break;
                     case 6:
                         outdoorMenu = false;
@@ -283,6 +294,7 @@ namespace WeatherApp.Methods
             {
                 Console.WriteLine("No data for that date");
             }
+            Console.ReadKey();
         }
 
         private static void DisplayHumidity(List<Day> days)
@@ -310,15 +322,52 @@ namespace WeatherApp.Methods
                 Console.WriteLine($"Date: {m.Date}\tTemperature: {m.AvgTemp}   \tHumidity: {m.AvgHumidity}\t\tMold risk index: {m.HumidityIndex}");
             }
         }
-        private static void MetrologicalWinter()
+        private static void MetrologicalWinter(List<Day> days)
         {
-
+            List<Day> winterDays = new List<Day>();
+            for (int i = 0; i < days.Count; i++)
+            {
+                if (days[i].AvgTemp < 2)
+                {
+                    winterDays.Add(days[i]);
+                    if (winterDays.Count == 5)
+                    {
+                        break;
+                    }
+                }
+                else
+                {
+                    winterDays.Clear();
+                }
+            }
+            if (winterDays.Count > 0)
+            {
+                Console.WriteLine($"Winter is coming {winterDays[0].Date}");
+            }
         }
-        private static void MetrologicalFall()
+        private static void MetrologicalFall(List<Day> days)
         {
-
+            List<Day> fallDays = new List<Day>();
+            for (int i = 0; i < days.Count; i++)
+            {
+                if (days[i].AvgTemp < 10)
+                {
+                    fallDays.Add(days[i]);
+                    if (fallDays.Count == 5)
+                    {
+                        break;
+                    }
+                }
+                else
+                {
+                    fallDays.Clear();
+                }
+            }
+            if (fallDays.Count > 0)
+            {
+                Console.WriteLine($"Fall starts on {fallDays[0].Date}");
+            }
         }
-
     }
 }
 
