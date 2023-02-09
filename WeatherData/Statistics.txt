@@ -20,25 +20,55 @@ Fall starts on 2016-10-04
 
 Winter is coming on 2016-11-06
 
-using WeatherApp.Methods;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace WeatherApp
+namespace WeatherApp.Methods
 {
-    internal class Program
+    public static class Extensions
     {
-        static void Main(string[] args)
+        public static double CalculateMoldRisk(this double AvgTemp, double AvgHumidity)
         {
-            //string[] test = new string[3];
-            //var mainMenuEnums = (Enum.GetNames(typeof(Enums.OutDoorMenu))); // returnar en array med allt innehåll. Funkar utmärkt för detta
-            //List <string> data = Helpers.FetchData("Ute");
-            //Helpers.DisplayDataForDay("2016-10-18", "Inne");
-            //Helpers.SortByTemp("Ute");)
-            Helpers.SaveToFile();
-            Helpers.DisplayMainMenu();
-            Console.WriteLine();
-            
-            //int choice = Helpers.MultipleChoice(true, mainMenuEnums);
-            //Console.WriteLine(choice);
+            double HumidityIndex = 0;
+            if (AvgTemp > 50 || AvgTemp < 0 || AvgHumidity < 78)
+            {
+                HumidityIndex = 0;
+            }
+            else
+            {
+                if (AvgTemp >= 38)
+                    HumidityIndex += 5;
+
+                if (AvgTemp >= 25 && AvgTemp < 38)
+                    HumidityIndex += 15;
+
+                if (AvgTemp < 25 && AvgTemp >= 16)
+                    HumidityIndex += 20;
+
+                if (AvgTemp < 16 && AvgTemp >= 10)
+                    HumidityIndex += 35;
+
+                if (AvgTemp < 10 && AvgTemp >= 0)
+                    HumidityIndex += 50;
+
+                if (AvgHumidity > 78 && AvgHumidity <= 83)
+                    HumidityIndex += 15;
+
+                if (AvgHumidity > 83 && AvgHumidity <= 87)
+                    HumidityIndex += 20;
+
+                if (AvgHumidity > 87 && AvgHumidity <= 95)
+                    HumidityIndex += 40;
+
+                if (AvgHumidity > 95 && AvgHumidity <= 100)
+                    HumidityIndex += 50;
+            }
+            return HumidityIndex;
         }
     }
+
 }
+

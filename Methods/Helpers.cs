@@ -262,7 +262,6 @@ namespace WeatherApp.Methods
             Console.ReadKey();
             return month.Days;
         }
-
         public static void DisplayDataForDay(string date, string prefix)
         {
             string path = "../../../tempdata5-med fel/tempdata5-med fel.txt";
@@ -297,7 +296,6 @@ namespace WeatherApp.Methods
             }
             Console.ReadKey();
         }
-
         private static void DisplayHumidity(List<Day> days)
         {
             foreach (var m in days.OrderByDescending(x => x.AvgHumidity))
@@ -504,10 +502,10 @@ namespace WeatherApp.Methods
             MetrologicalFall(outdoorData, 1);
             MetrologicalWinter(outdoorData, 1);
 
-            string methodPath = "../../../Program.cs";
+            string methodPath = "../../../Methods/Extensions.cs";
             string methodBody = File.ReadAllText(methodPath);
 
-            File.AppendAllText(path + "Statistics.txt", "\n" + methodBody);
+            File.AppendAllText(path + "Statistics.txt", "\nMoldrisk Calculation Method\n" + methodBody);
         }
     }
 }
