@@ -1,21 +1,44 @@
-Month: 06	Average temp: 24.635294117647057	Average humidity: 28.50588235294118	Average mold risk index: 0
-Month: 07	Average temp: 26.03333333333333	Average humidity: 44.78	Average mold risk index: 0
-Month: 08	Average temp: 25.3	Average humidity: 33.5	Average mold risk index: 0
-Month: 09	Average temp: 23.243478260869566	Average humidity: 41.20739130434782	Average mold risk index: 0
-Month: 10	Average temp: 22.39629629629629	Average humidity: 27.44851851851852	Average mold risk index: 0
-Month: 11	Average temp: 22.806896551724133	Average humidity: 19.145517241379316	Average mold risk index: 0
-Month: 12	Average temp: 21.778260869565216	Average humidity: 16.040869565217392	Average mold risk index: 0
-Month: 06	Average temp: 24.635294117647057	Average humidity: 28.50588235294118	Average mold risk index: 0
-Month: 07	Average temp: 26.03333333333333	Average humidity: 44.78	Average mold risk index: 0
-Month: 08	Average temp: 25.3	Average humidity: 33.5	Average mold risk index: 0
-Month: 09	Average temp: 23.243478260869566	Average humidity: 41.20739130434782	Average mold risk index: 0
-Month: 10	Average temp: 22.39629629629629	Average humidity: 27.44851851851852	Average mold risk index: 0
-Month: 11	Average temp: 22.806896551724133	Average humidity: 19.145517241379316	Average mold risk index: 0
-Month: 12	Average temp: 21.778260869565216	Average humidity: 16.040869565217392	Average mold risk index: 0
-Month: 06	Average temp: 24,64	Average humidity: 28,51	Average mold risk index: 0
-Month: 07	Average temp: 26,03	Average humidity: 44,78	Average mold risk index: 0
-Month: 08	Average temp: 25,3	Average humidity: 33,5	Average mold risk index: 0
-Month: 09	Average temp: 23,24	Average humidity: 41,21	Average mold risk index: 0
-Month: 10	Average temp: 22,4	Average humidity: 27,45	Average mold risk index: 0
-Month: 11	Average temp: 22,81	Average humidity: 19,15	Average mold risk index: 0
-Month: 12	Average temp: 21,78	Average humidity: 16,04	Average mold risk index: 0
+Ute
+Month: 06	Average temp: 16.03	Average humidity: 47.59	Average mold risk (%): 0
+Month: 07	Average temp: 20.37	Average humidity: 59	Average mold risk (%): 0
+Month: 08	Average temp: 19	Average humidity: 45.28	Average mold risk (%): 0
+Month: 09	Average temp: 16.2	Average humidity: 60.39	Average mold risk (%): 0
+Month: 10	Average temp: 8.19	Average humidity: 64.3	Average mold risk (%): 0
+Month: 11	Average temp: 4.53	Average humidity: 84.55	Average mold risk (%): 70
+Month: 12	Average temp: 3.5	Average humidity: 78.3	Average mold risk (%): 65
+
+Inne
+Month: 06	Average temp: 24.64	Average humidity: 28.51	Average mold risk (%): 0
+Month: 07	Average temp: 26.03	Average humidity: 44.78	Average mold risk (%): 0
+Month: 08	Average temp: 25.3	Average humidity: 33.5	Average mold risk (%): 0
+Month: 09	Average temp: 23.24	Average humidity: 41.21	Average mold risk (%): 0
+Month: 10	Average temp: 22.4	Average humidity: 27.45	Average mold risk (%): 0
+Month: 11	Average temp: 22.81	Average humidity: 19.15	Average mold risk (%): 0
+Month: 12	Average temp: 21.78	Average humidity: 16.04	Average mold risk (%): 0
+
+Fall starts on 2016-10-04
+
+Winter is coming on 2016-11-06
+
+using WeatherApp.Methods;
+
+namespace WeatherApp
+{
+    internal class Program
+    {
+        static void Main(string[] args)
+        {
+            //string[] test = new string[3];
+            //var mainMenuEnums = (Enum.GetNames(typeof(Enums.OutDoorMenu))); // returnar en array med allt innehåll. Funkar utmärkt för detta
+            //List <string> data = Helpers.FetchData("Ute");
+            //Helpers.DisplayDataForDay("2016-10-18", "Inne");
+            //Helpers.SortByTemp("Ute");)
+            Helpers.SaveToFile();
+            Helpers.DisplayMainMenu();
+            Console.WriteLine();
+            
+            //int choice = Helpers.MultipleChoice(true, mainMenuEnums);
+            //Console.WriteLine(choice);
+        }
+    }
+}

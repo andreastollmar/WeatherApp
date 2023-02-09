@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
@@ -169,11 +170,11 @@ namespace WeatherApp.Methods
                         Console.ReadKey();
                         break;
                     case 4:
-                        MetrologicalWinter(days);
+                        MetrologicalWinter(days, 0);
                         Console.ReadKey();
                         break;
                     case 5:
-                        MetrologicalFall(days);
+                        MetrologicalFall(days, 0);
                         Console.ReadKey();
                         break;
                     case 6:
@@ -322,8 +323,10 @@ namespace WeatherApp.Methods
                 Console.WriteLine($"Date: {m.Date}\tTemperature: {m.AvgTemp}   \tHumidity: {m.AvgHumidity}\t\tMold risk index: {m.HumidityIndex}");
             }
         }
-        private static void MetrologicalWinter(List<Day> days)
+        private static void MetrologicalWinter(List<Day> days, int choice)
         {
+            string path = "../../../WeatherData/";
+
             List<Day> winterDays = new List<Day>();
             for (int i = 0; i < days.Count; i++)
             {
@@ -342,11 +345,20 @@ namespace WeatherApp.Methods
             }
             if (winterDays.Count > 0)
             {
-                Console.WriteLine($"Winter is coming {winterDays[0].Date}");
+                if (choice == 0)
+                {
+                    Console.WriteLine("Winter is coming on " + winterDays[0].Date);
+                }
+                if (choice == 1)
+                {
+                    File.AppendAllText(path + "Statistics.txt", "\nWinter is coming on " + winterDays[0].Date+ "\n");
+                }
             }
         }
-        private static void MetrologicalFall(List<Day> days)
+        private static void MetrologicalFall(List<Day> days, int choice)
         {
+            string path = "../../../WeatherData/";
+
             List<Day> fallDays = new List<Day>();
             for (int i = 0; i < days.Count; i++)
             {
@@ -365,16 +377,22 @@ namespace WeatherApp.Methods
             }
             if (fallDays.Count > 0)
             {
-                Console.WriteLine($"Fall starts on {fallDays[0].Date}");
+                if (choice == 0)
+                {
+                    Console.WriteLine($"Fall starts on {fallDays[0].Date}");
+                }
+                if (choice == 1)
+                {
+                    File.AppendAllText(path + "Statistics.txt", "\nFall starts on " + fallDays[0].Date + "\n");
+                }
             }
         }
         public static void SaveToFile()
         {
             string path = "../../../WeatherData/";
 
-            // Medeltemp ute och inne per månad
-            // medelfuktighet ----||----
-            // medelmögelrisk -----||---
+            File.Delete(path + "Statistics.txt");
+
             double avgTemp = 0;
             double avgHumidity = 0;
             double avgMoldRisk = 0;
@@ -383,6 +401,57 @@ namespace WeatherApp.Methods
             List<Day> indoorData = SortData("Inne");
             List<Day> outdoorData = SortData("Ute");
 
+            File.AppendAllText(path + "Statistics.txt", "Ute\n");
+            for (int i = 0; i < outdoorData.Count; i++)
+            {
+                if (i == 0)
+                {
+                    avgTemp += outdoorData[i].AvgTemp;
+                    avgHumidity += outdoorData[i].AvgHumidity;
+                    avgMoldRisk += outdoorData[i].HumidityIndex;
+                    count++;
+                }
+                else
+                {
+                    string dayOne = outdoorData[i].Date.Substring(5, 2);
+                    string dayTwo = "";
+                    try
+                    {
+                        dayTwo = outdoorData[i + 1].Date.Substring(5, 2);
+                    }
+                    catch
+                    {
+                        avgTemp += outdoorData[i].AvgTemp;
+                        avgHumidity += outdoorData[i].AvgHumidity;
+                        avgMoldRisk += outdoorData[i].HumidityIndex;
+                        count++;
+                    }
+                    if (dayOne == dayTwo)
+                    {
+                        avgTemp += outdoorData[i].AvgTemp;
+                        avgHumidity += outdoorData[i].AvgHumidity;
+                        avgMoldRisk += outdoorData[i].HumidityIndex;
+                        count++;
+                    }
+                    else
+                    {
+
+                        avgTemp = Math.Round((avgTemp / count), 2);
+                        avgHumidity = Math.Round((avgHumidity / count), 2);
+
+                        double moldTemp = avgTemp.CalculateMoldRisk(avgHumidity);
+
+                        string statistics = $"Month: {dayOne}\tAverage temp: {avgTemp}\tAverage humidity: {avgHumidity}\tAverage mold risk (%): {moldTemp}\n";
+                        File.AppendAllText(path + "Statistics.txt", statistics);
+                        avgTemp = 0;
+                        avgHumidity = 0;
+                        avgMoldRisk = 0;
+                        count = 0;
+                    }
+
+                }
+            }
+            File.AppendAllText(path + "Statistics.txt", "\nInne\n");
             for (int i = 0; i < indoorData.Count; i++)
             {
                 if (i == 0)
@@ -416,10 +485,12 @@ namespace WeatherApp.Methods
                     }
                     else
                     {
-                        avgTemp = Math.Round((avgTemp/ count), 2); // runda av decimaler 
+                        avgTemp = Math.Round((avgTemp / count), 2);
                         avgHumidity = Math.Round((avgHumidity / count), 2);
-                        avgMoldRisk = Math.Round((avgMoldRisk / count), 2);
-                        string statistics = $"Month: {dayOne}\tAverage temp: {avgTemp}\tAverage humidity: {avgHumidity}\tAverage mold risk index: {avgMoldRisk}\n";
+
+                        double moldTemp = avgTemp.CalculateMoldRisk(avgHumidity);
+
+                        string statistics = $"Month: {dayOne}\tAverage temp: {avgTemp}\tAverage humidity: {avgHumidity}\tAverage mold risk (%): {moldTemp}\n";
                         File.AppendAllText(path + "Statistics.txt", statistics);
                         avgTemp = 0;
                         avgHumidity = 0;
@@ -430,8 +501,13 @@ namespace WeatherApp.Methods
                 }
             }
 
-            // höst och vinter-datum 
-            // skriv ut mögelalgoritm 
+            MetrologicalFall(outdoorData, 1);
+            MetrologicalWinter(outdoorData, 1);
+
+            string methodPath = "../../../Program.cs";
+            string methodBody = File.ReadAllText(methodPath);
+
+            File.AppendAllText(path + "Statistics.txt", "\n" + methodBody);
         }
     }
 }
