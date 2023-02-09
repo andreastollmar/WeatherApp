@@ -25,7 +25,6 @@ namespace WeatherApp.Methods
             ConsoleKey key;
 
             Console.CursorVisible = false;
-
             do
             {
                 Console.Clear();
@@ -109,46 +108,49 @@ namespace WeatherApp.Methods
             }
         }
         public static void DisplayIndoorMenu()
-        {
+        {            
             bool indoorMenu = true;
             List<Day> days = SortData("Inne");
             while (indoorMenu)
-            {
+            {                
                 var indoorMenuArray = Enum.GetNames(typeof(Enums.IndoorMenu));
-                int choice = MultipleChoice(false, indoorMenuArray);
-                switch (choice)
+                int choice = 0;
+                
+                switch (MultipleChoice(false, indoorMenuArray))
                 {
                     case 0:
                         string input = ValidateData.ValidateDate("Enter Date to search: ");
                         DisplayDataForDay(input, "Inne");
-                        Console.ReadKey();
+                        Console.ReadKey();                        
                         break;
-                    case 1:
-                        Console.Clear();
+                    case 1:                        
                         DisplayTemp(days);
                         Console.ReadKey();
+                        Console.Clear();
                         break;
                     case 2:
                         DisplayHumidity(days);
                         Console.ReadKey();
+                        Console.Clear();
                         break;
                     case 3:
                         DisplayMoldRisk(days);
                         Console.ReadKey();
+                        Console.Clear();
                         break;
                     case 4:
                         indoorMenu = false;
                         break;
 
-                }
+                }                
             }
         }
         public static void DisplayOutdoorMenu()
-        {
+        {            
             bool outdoorMenu = true;
             List<Day> days = SortData("Ute");
             while (outdoorMenu)
-            {
+            {                
                 var outdoorMenuArray = Enum.GetNames(typeof(Enums.OutDoorMenu));
                 int choice = MultipleChoice(false, outdoorMenuArray);
                 switch (choice)
@@ -303,8 +305,9 @@ namespace WeatherApp.Methods
         }
         private static void DisplayTemp(List<Day> days)
         {
+            int i = 0;
             foreach (var m in days.OrderByDescending(x => x.AvgTemp))
-            {
+            {                
                 Console.WriteLine($"{m.Date} {m.AvgTemp}");
             }
         }
@@ -411,8 +414,7 @@ namespace WeatherApp.Methods
 
             int padSmall = 12;
             double avgTemp = 0;
-            double avgHumidity = 0;
-            double avgMoldRisk = 0;
+            double avgHumidity = 0;            
             int count = 0;
 
             for (int i = 0; i < days.Count; i++)
@@ -420,8 +422,7 @@ namespace WeatherApp.Methods
                 if (i == 0)
                 {
                     avgTemp += days[i].AvgTemp;
-                    avgHumidity += days[i].AvgHumidity;
-                    avgMoldRisk += days[i].HumidityIndex;
+                    avgHumidity += days[i].AvgHumidity;                    
                     count++;
                 }
                 else
@@ -435,15 +436,13 @@ namespace WeatherApp.Methods
                     catch
                     {
                         avgTemp += days[i].AvgTemp;
-                        avgHumidity += days[i].AvgHumidity;
-                        avgMoldRisk += days[i].HumidityIndex;
+                        avgHumidity += days[i].AvgHumidity;                        
                         count++;
                     }
                     if (dayOne == dayTwo)
                     {
                         avgTemp += days[i].AvgTemp;
-                        avgHumidity += days[i].AvgHumidity;
-                        avgMoldRisk += days[i].HumidityIndex;
+                        avgHumidity += days[i].AvgHumidity;                        
                         count++;
                     }
                     else
@@ -461,8 +460,7 @@ namespace WeatherApp.Methods
                         string statistics = $"Month: {monthName.PadRight(padSmall)}Average temp: {avgTemp.ToString().PadRight(padSmall)}Average humidity: {avgHumidity.ToString().PadRight(padSmall)}Average mold risk (%): {moldTemp.ToString().PadRight(padSmall)}\n";
                         File.AppendAllText(path + "Statistics.txt", statistics);
                         avgTemp = 0;
-                        avgHumidity = 0;
-                        avgMoldRisk = 0;
+                        avgHumidity = 0;                       
                         count = 0;
                     }
 
