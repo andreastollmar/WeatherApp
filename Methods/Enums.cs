@@ -32,6 +32,16 @@ namespace WeatherApp.Methods
             Metrological_Fall,
             Return
         }
+        public enum Months
+        {
+            June = 6,
+            July,
+            August,
+            September,
+            October,
+            November,
+            December
+        }
 
     }
 }

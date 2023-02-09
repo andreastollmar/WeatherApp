@@ -85,6 +85,7 @@ namespace WeatherApp.Methods
         }
         public static void DisplayMainMenu()
         {
+            SaveToFile();
             bool runMenu = true;
             while (runMenu)
             {
@@ -257,9 +258,7 @@ namespace WeatherApp.Methods
                     }
                 }
                 i++;
-            }
-
-            Console.ReadKey();
+            }            
             return month.Days;
         }
         public static void DisplayDataForDay(string date, string prefix)
@@ -293,8 +292,7 @@ namespace WeatherApp.Methods
             else
             {
                 Console.WriteLine("No data for that date");
-            }
-            Console.ReadKey();
+            }            
         }
         private static void DisplayHumidity(List<Day> days)
         {
@@ -385,119 +383,17 @@ namespace WeatherApp.Methods
                 }
             }
         }
-        public static void SaveToFile()
-        {
-            string path = "../../../WeatherData/";
-
-            File.Delete(path + "Statistics.txt");
-
-            double avgTemp = 0;
-            double avgHumidity = 0;
-            double avgMoldRisk = 0;
-            int count = 0;
+        private static void SaveToFile()
+        {     
+            string path = "../../../WeatherData/Statistics.txt";
+            Directory.CreateDirectory("../../../WeatherData");
+            File.Delete(path);            
 
             List<Day> indoorData = SortData("Inne");
             List<Day> outdoorData = SortData("Ute");
 
-            File.AppendAllText(path + "Statistics.txt", "Ute\n");
-            for (int i = 0; i < outdoorData.Count; i++)
-            {
-                if (i == 0)
-                {
-                    avgTemp += outdoorData[i].AvgTemp;
-                    avgHumidity += outdoorData[i].AvgHumidity;
-                    avgMoldRisk += outdoorData[i].HumidityIndex;
-                    count++;
-                }
-                else
-                {
-                    string dayOne = outdoorData[i].Date.Substring(5, 2);
-                    string dayTwo = "";
-                    try
-                    {
-                        dayTwo = outdoorData[i + 1].Date.Substring(5, 2);
-                    }
-                    catch
-                    {
-                        avgTemp += outdoorData[i].AvgTemp;
-                        avgHumidity += outdoorData[i].AvgHumidity;
-                        avgMoldRisk += outdoorData[i].HumidityIndex;
-                        count++;
-                    }
-                    if (dayOne == dayTwo)
-                    {
-                        avgTemp += outdoorData[i].AvgTemp;
-                        avgHumidity += outdoorData[i].AvgHumidity;
-                        avgMoldRisk += outdoorData[i].HumidityIndex;
-                        count++;
-                    }
-                    else
-                    {
-
-                        avgTemp = Math.Round((avgTemp / count), 2);
-                        avgHumidity = Math.Round((avgHumidity / count), 2);
-
-                        double moldTemp = avgTemp.CalculateMoldRisk(avgHumidity);
-
-                        string statistics = $"Month: {dayOne}\tAverage temp: {avgTemp}\tAverage humidity: {avgHumidity}\tAverage mold risk (%): {moldTemp}\n";
-                        File.AppendAllText(path + "Statistics.txt", statistics);
-                        avgTemp = 0;
-                        avgHumidity = 0;
-                        avgMoldRisk = 0;
-                        count = 0;
-                    }
-
-                }
-            }
-            File.AppendAllText(path + "Statistics.txt", "\nInne\n");
-            for (int i = 0; i < indoorData.Count; i++)
-            {
-                if (i == 0)
-                {
-                    avgTemp += indoorData[i].AvgTemp;
-                    avgHumidity += indoorData[i].AvgHumidity;
-                    avgMoldRisk += indoorData[i].HumidityIndex;
-                    count++;
-                }
-                else
-                {
-                    string dayOne = indoorData[i].Date.Substring(5, 2);
-                    string dayTwo = "";
-                    try
-                    {
-                        dayTwo = indoorData[i + 1].Date.Substring(5, 2);
-                    }
-                    catch
-                    {
-                        avgTemp += indoorData[i].AvgTemp;
-                        avgHumidity += indoorData[i].AvgHumidity;
-                        avgMoldRisk += indoorData[i].HumidityIndex;
-                        count++;
-                    }
-                    if (dayOne == dayTwo)
-                    {
-                        avgTemp += indoorData[i].AvgTemp;
-                        avgHumidity += indoorData[i].AvgHumidity;
-                        avgMoldRisk += indoorData[i].HumidityIndex;
-                        count++;
-                    }
-                    else
-                    {
-                        avgTemp = Math.Round((avgTemp / count), 2);
-                        avgHumidity = Math.Round((avgHumidity / count), 2);
-
-                        double moldTemp = avgTemp.CalculateMoldRisk(avgHumidity);
-
-                        string statistics = $"Month: {dayOne}\tAverage temp: {avgTemp}\tAverage humidity: {avgHumidity}\tAverage mold risk (%): {moldTemp}\n";
-                        File.AppendAllText(path + "Statistics.txt", statistics);
-                        avgTemp = 0;
-                        avgHumidity = 0;
-                        avgMoldRisk = 0;
-                        count = 0;
-                    }
-
-                }
-            }
+            SaveDataToFile(indoorData, "Inne");
+            SaveDataToFile(outdoorData, "Ute");
 
             MetrologicalFall(outdoorData, 1);
             MetrologicalWinter(outdoorData, 1);
@@ -505,7 +401,69 @@ namespace WeatherApp.Methods
             string methodPath = "../../../Methods/Extensions.cs";
             string methodBody = File.ReadAllText(methodPath);
 
-            File.AppendAllText(path + "Statistics.txt", "\nMoldrisk Calculation Method\n" + methodBody);
+            File.AppendAllText(path, "\nMoldrisk Calculation Method\n" + methodBody);
+        }
+
+        private static void SaveDataToFile(List<Day> days, string outOrIn)
+        {
+            string path = "../../../WeatherData/";
+            File.AppendAllText(path + "Statistics.txt", outOrIn + "\n");
+
+            int padSmall = 12;
+            double avgTemp = 0;
+            double avgHumidity = 0;
+            double avgMoldRisk = 0;
+            int count = 0;
+
+            for (int i = 0; i < days.Count; i++)
+            {
+                if (i == 0)
+                {
+                    avgTemp += days[i].AvgTemp;
+                    avgHumidity += days[i].AvgHumidity;
+                    avgMoldRisk += days[i].HumidityIndex;
+                    count++;
+                }
+                else
+                {
+                    string dayOne = days[i].Date.Substring(5, 2);
+                    string dayTwo = "";
+                    try
+                    {
+                        dayTwo = days[i + 1].Date.Substring(5, 2);
+                    }
+                    catch
+                    {
+                        avgTemp += days[i].AvgTemp;
+                        avgHumidity += days[i].AvgHumidity;
+                        avgMoldRisk += days[i].HumidityIndex;
+                        count++;
+                    }
+                    if (dayOne == dayTwo)
+                    {
+                        avgTemp += days[i].AvgTemp;
+                        avgHumidity += days[i].AvgHumidity;
+                        avgMoldRisk += days[i].HumidityIndex;
+                        count++;
+                    }
+                    else
+                    {
+                        int monthEnum = int.Parse(dayOne);
+                        avgTemp = Math.Round((avgTemp / count), 2);
+                        avgHumidity = Math.Round((avgHumidity / count), 2);
+
+                        double moldTemp = avgTemp.CalculateMoldRisk(avgHumidity);
+
+                        string statistics = $"Month: {Enum.GetName(typeof(Enums.Months), monthEnum).PadRight(padSmall)}Average temp: {avgTemp.ToString().PadRight(padSmall)}Average humidity: {avgHumidity.ToString().PadRight(padSmall)}Average mold risk (%): {moldTemp.ToString().PadRight(padSmall)}\n";
+                        File.AppendAllText(path + "Statistics.txt", statistics);
+                        avgTemp = 0;
+                        avgHumidity = 0;
+                        avgMoldRisk = 0;
+                        count = 0;
+                    }
+
+                }
+            }
         }
     }
 }

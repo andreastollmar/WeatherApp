@@ -1,25 +1,25 @@
-Ute
-Month: 06	Average temp: 16.03	Average humidity: 47.59	Average mold risk (%): 0
-Month: 07	Average temp: 20.37	Average humidity: 59	Average mold risk (%): 0
-Month: 08	Average temp: 19	Average humidity: 45.28	Average mold risk (%): 0
-Month: 09	Average temp: 16.2	Average humidity: 60.39	Average mold risk (%): 0
-Month: 10	Average temp: 8.19	Average humidity: 64.3	Average mold risk (%): 0
-Month: 11	Average temp: 4.53	Average humidity: 84.55	Average mold risk (%): 70
-Month: 12	Average temp: 3.5	Average humidity: 78.3	Average mold risk (%): 65
-
 Inne
-Month: 06	Average temp: 24.64	Average humidity: 28.51	Average mold risk (%): 0
-Month: 07	Average temp: 26.03	Average humidity: 44.78	Average mold risk (%): 0
-Month: 08	Average temp: 25.3	Average humidity: 33.5	Average mold risk (%): 0
-Month: 09	Average temp: 23.24	Average humidity: 41.21	Average mold risk (%): 0
-Month: 10	Average temp: 22.4	Average humidity: 27.45	Average mold risk (%): 0
-Month: 11	Average temp: 22.81	Average humidity: 19.15	Average mold risk (%): 0
-Month: 12	Average temp: 21.78	Average humidity: 16.04	Average mold risk (%): 0
+Month: June        Average temp: 24,64       Average humidity: 28,51       Average mold risk (%): 0           
+Month: July        Average temp: 26,03       Average humidity: 44,78       Average mold risk (%): 0           
+Month: August      Average temp: 25,3        Average humidity: 33,5        Average mold risk (%): 0           
+Month: September   Average temp: 23,24       Average humidity: 41,21       Average mold risk (%): 0           
+Month: October     Average temp: 22,4        Average humidity: 27,45       Average mold risk (%): 0           
+Month: November    Average temp: 22,81       Average humidity: 19,15       Average mold risk (%): 0           
+Month: December    Average temp: 21,78       Average humidity: 16,04       Average mold risk (%): 0           
+Ute
+Month: June        Average temp: 16,03       Average humidity: 47,59       Average mold risk (%): 0           
+Month: July        Average temp: 20,37       Average humidity: 59          Average mold risk (%): 0           
+Month: August      Average temp: 19          Average humidity: 45,28       Average mold risk (%): 0           
+Month: September   Average temp: 16,2        Average humidity: 60,39       Average mold risk (%): 0           
+Month: October     Average temp: 8,19        Average humidity: 64,3        Average mold risk (%): 0           
+Month: November    Average temp: 4,53        Average humidity: 84,55       Average mold risk (%): 70          
+Month: December    Average temp: 3,5         Average humidity: 78,3        Average mold risk (%): 65          
 
 Fall starts on 2016-10-04
 
 Winter is coming on 2016-11-06
 
+Moldrisk Calculation Method
 using System;
 using System.Collections.Generic;
 using System.Linq;
