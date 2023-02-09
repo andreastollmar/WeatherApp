@@ -17,8 +17,7 @@ namespace WeatherApp.Methods
             {
                 Console.WriteLine("Invalid input, try again: ");
                 input = Console.ReadLine();
-            }
-            // Kör nästa method som letar upp alla matches med datumet inläst från användare
+            }            
             return input;
         }
 

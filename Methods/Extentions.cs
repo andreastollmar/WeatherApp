@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WeatherApp.Methods
 {
-    public static class Extensions
+    public static class Extentions
     {
         public static double CalculateMoldRisk(this double AvgTemp, double AvgHumidity)
         {

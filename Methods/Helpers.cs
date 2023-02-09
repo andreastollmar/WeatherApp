@@ -13,7 +13,7 @@ namespace WeatherApp.Methods
 {
     internal class Helpers
     {
-        public static int MultipleChoice(bool canCancel, params string[] options) // menuval kolla hur det funkar
+        public static int MultipleChoice(bool canCancel, params string[] options)
         {
             const int startX = 0;
             const int startY = 0;
@@ -386,7 +386,7 @@ namespace WeatherApp.Methods
         private static void SaveToFile()
         {     
             string path = "../../../WeatherData/Statistics.txt";
-            Directory.CreateDirectory("../../../WeatherData");
+            Directory.CreateDirectory("../../../WeatherData");  // Creating a folder if it doesn't exist (RiskHandlin')
             File.Delete(path);            
 
             List<Day> indoorData = SortData("Inne");
@@ -398,7 +398,7 @@ namespace WeatherApp.Methods
             MetrologicalFall(outdoorData, 1);
             MetrologicalWinter(outdoorData, 1);
 
-            string methodPath = "../../../Methods/Extensions.cs";
+            string methodPath = "../../../Methods/Extentions.cs";
             string methodBody = File.ReadAllText(methodPath);
 
             File.AppendAllText(path, "\nMoldrisk Calculation Method\n" + methodBody);
@@ -453,8 +453,12 @@ namespace WeatherApp.Methods
                         avgHumidity = Math.Round((avgHumidity / count), 2);
 
                         double moldTemp = avgTemp.CalculateMoldRisk(avgHumidity);
-
-                        string statistics = $"Month: {Enum.GetName(typeof(Enums.Months), monthEnum).PadRight(padSmall)}Average temp: {avgTemp.ToString().PadRight(padSmall)}Average humidity: {avgHumidity.ToString().PadRight(padSmall)}Average mold risk (%): {moldTemp.ToString().PadRight(padSmall)}\n";
+                        string monthName = Enum.GetName(typeof(Enums.Months), monthEnum);
+                        if (monthName == null)
+                        {
+                            monthName = "Unknown";
+                        }
+                        string statistics = $"Month: {monthName.PadRight(padSmall)}Average temp: {avgTemp.ToString().PadRight(padSmall)}Average humidity: {avgHumidity.ToString().PadRight(padSmall)}Average mold risk (%): {moldTemp.ToString().PadRight(padSmall)}\n";
                         File.AppendAllText(path + "Statistics.txt", statistics);
                         avgTemp = 0;
                         avgHumidity = 0;
