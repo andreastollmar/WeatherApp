@@ -28,8 +28,8 @@ namespace WeatherApp.Methods
             Sort_By_Temperature,
             Sort_By_Humidity,
             Sort_By_Risk_For_Mold,
-            Metrological_Winter,
-            Metrological_Fall,
+            Meteorological_Winter,
+            Meteorological_Fall,
             Return
         }
         public enum Months

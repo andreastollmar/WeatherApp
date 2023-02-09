@@ -171,11 +171,11 @@ namespace WeatherApp.Methods
                         Console.ReadKey();
                         break;
                     case 4:
-                        MetrologicalWinter(days, 0);
+                        MeteorologicalWinter(days, 0);
                         Console.ReadKey();
                         break;
                     case 5:
-                        MetrologicalFall(days, 0);
+                        MeteorologicalFall(days, 0);
                         Console.ReadKey();
                         break;
                     case 6:
@@ -319,7 +319,7 @@ namespace WeatherApp.Methods
                 Console.WriteLine($"Date: {m.Date}\tTemperature: {m.AvgTemp}   \tHumidity: {m.AvgHumidity}\t\tMold risk index: {m.HumidityIndex}");
             }
         }
-        private static void MetrologicalWinter(List<Day> days, int choice)
+        private static void MeteorologicalWinter(List<Day> days, int choice)
         {
             string path = "../../../WeatherData/";
 
@@ -351,7 +351,7 @@ namespace WeatherApp.Methods
                 }
             }
         }
-        private static void MetrologicalFall(List<Day> days, int choice)
+        private static void MeteorologicalFall(List<Day> days, int choice)
         {
             string path = "../../../WeatherData/";
 
@@ -395,8 +395,8 @@ namespace WeatherApp.Methods
             SaveDataToFile(indoorData, "Inne");
             SaveDataToFile(outdoorData, "Ute");
 
-            MetrologicalFall(outdoorData, 1);
-            MetrologicalWinter(outdoorData, 1);
+            MeteorologicalFall(outdoorData, 1);
+            MeteorologicalWinter(outdoorData, 1);
 
             string methodPath = "../../../Methods/Extentions.cs";
             string methodBody = File.ReadAllText(methodPath);
