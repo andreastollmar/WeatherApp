@@ -189,7 +189,7 @@ namespace WeatherApp.Methods
         public static List<string> FetchData(string inOrOut)
         {
             string path = "../../../tempdata5-med fel/tempdata5-med fel.txt";
-            string pattern = @"^(?<date>[0-9]{4}-[0-1][0-9]-[0-3][0-9])\s([0-2][0-9]:[0-5][0-9]:[0-5][0-9])," + inOrOut + ",(?<temp>[0-9][0-9]*.[0-9]),(?<humidity>[0-9][0-9]*)$";
+            string pattern = @"^(?<date>[0-9]{4}-[0-1][0-9]-[0-3][0-9])\s([0-2][0-9]:[0-5][0-9]:[0-5][0-9])," + inOrOut + ",(?<temp>-?[0-9][0-9]*.[0-9]),(?<humidity>[0-9][0-9]*)$";
             Regex regex = new Regex(pattern);
             var allData = File.ReadAllLines(path);
 
@@ -217,7 +217,7 @@ namespace WeatherApp.Methods
         {
             List<string> tempData = FetchData(inOrOut);
 
-            string pattern = @"^(?<date>[0-9]{4}-[0-1][0-9]-[0-3][0-9])\s([0-2][0-9]:[0-5][0-9]:[0-5][0-9])," + inOrOut + ",(?<temp>[0-9][0-9]*.[0-9]),(?<humidity>[0-9][0-9]*)$";
+            string pattern = @"^(?<date>[0-9]{4}-[0-1][0-9]-[0-3][0-9])\s([0-2][0-9]:[0-5][0-9]:[0-5][0-9])," + inOrOut + ",(?<temp>-?[0-9][0-9]*.[0-9]),(?<humidity>[0-9][0-9]*)$";
             Regex regex = new Regex(pattern);
             int i = 0;
             int matchCount = 0;
@@ -236,7 +236,7 @@ namespace WeatherApp.Methods
                     try { dateTwo = regex.Match(tempData[i + 1]).Groups["date"].Value; }
                     catch
                     {
-                        string nr = regex.Match(tempData[i]).Groups["temp"].Value.Replace(".", ",");
+                        string nr = regex.Match(tempData[i]).Groups["temp"].Value.Replace(".", ",").Trim();
                         string humidity = regex.Match(tempData[i]).Groups["humidity"].Value;
                         avgTemp += double.Parse(nr, CultureInfo.GetCultureInfo("sv-SE"));
                         avgHumidity += double.Parse(humidity);
@@ -244,7 +244,7 @@ namespace WeatherApp.Methods
                     }
                     if (dateOne == dateTwo)
                     {
-                        string nr = regex.Match(tempData[i]).Groups["temp"].Value.Replace(".", ",");
+                        string nr = regex.Match(tempData[i]).Groups["temp"].Value.Replace(".", ",").Trim();
                         string humidity = regex.Match(tempData[i]).Groups["humidity"].Value;
                         avgTemp += double.Parse(nr, CultureInfo.GetCultureInfo("sv-SE"));
                         avgHumidity += double.Parse(humidity);
@@ -329,7 +329,7 @@ namespace WeatherApp.Methods
             List<Day> winterDays = new List<Day>();
             for (int i = 0; i < days.Count; i++)
             {
-                if (days[i].AvgTemp < 2)
+                if (days[i].AvgTemp < 1)
                 {
                     winterDays.Add(days[i]);
                     if (winterDays.Count == 5)
